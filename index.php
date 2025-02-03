@@ -1,19 +1,72 @@
 <?php
-    // Di bagian atas file
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+define('ALLOWED_ACCESS', true);
+define('BASE_PATH', __DIR__);
 
-    // Logging untuk debug
-    error_log("Requested URI: " . $_SERVER['REQUEST_URI']);
-    error_log("Current working directory: " . getcwd());
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+// Logging untuk debug
+error_log("Requested URI: " . $_SERVER['REQUEST_URI']);
+error_log("Current working directory: " . getcwd());
+
 // Start session di awal
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Load configuration
+// Load configuration dan controllers
 require_once __DIR__ . '/config/constants.php';
 require_once __DIR__ . '/config/koneksi.php';
+require_once __DIR__ . '/controllers/AuthController.php';
+
+// Initialize AuthController
+$auth = new AuthController($conn);
+
+// Handle POST requests
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        // Log POST data (kecuali password)
+        $logData = $_POST;
+        if (isset($logData['password'])) $logData['password'] = '***';
+        if (isset($logData['confirm_password'])) $logData['confirm_password'] = '***';
+        error_log("POST Data: " . print_r($logData, true));
+
+        // Handle register
+        if (isset($_POST['action']) && $_POST['action'] === 'register') {
+            error_log("Processing registration request...");
+
+            // Validate CSRF token
+            if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
+                throw new Exception(ERROR_MESSAGES['general']['csrf']);
+            }
+
+            // Process registration
+            $auth->register($_POST);
+            exit();
+        }
+
+        // Handle login
+        if (isset($_POST['action']) && $_POST['action'] === 'login') {
+            error_log("Processing login request...");
+
+            // Validate required fields
+            if (empty($_POST['username']) || empty($_POST['password'])) {
+                throw new Exception(ERROR_MESSAGES['login']['failed']);
+            }
+
+            $auth->login($_POST['username'], $_POST['password']);
+            exit();
+        }
+    } catch (Exception $e) {
+        error_log("Error in form processing: " . $e->getMessage());
+        $_SESSION['error'] = $e->getMessage();
+
+        // Redirect back based on action
+        $redirect = BASE_URL . "/index.php?page=" .
+            (isset($_POST['action']) ? $_POST['action'] : 'login');
+        header("Location: " . $redirect);
+        exit();
+    }
+}
 
 // Fungsi untuk mendapatkan base URL
 function getBaseURL()
@@ -29,17 +82,24 @@ if (!defined('BASE_URL')) {
     define('BASE_URL', getBaseURL());
 }
 
+// Generate CSRF token if not exists
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // Get page from URL dan sanitasi
 $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_SANITIZE_URL) : 'login';
-    error_log("Current Page: " . $page);
-    error_log("Request URI: " . $_SERVER['REQUEST_URI']);
-    error_log("Script Name: " . $_SERVER['SCRIPT_NAME']);
-    error_log("Base URL: " . BASE_URL);
+error_log("Current Page: " . $page);
+error_log("Request URI: " . $_SERVER['REQUEST_URI']);
+error_log("Script Name: " . $_SERVER['SCRIPT_NAME']);
+error_log("Base URL: " . BASE_URL);
+
 // Daftar halaman yang tidak memerlukan autentikasi
 $public_pages = ['login', 'register'];
 
 // Authentication check
 if (!isset($_SESSION['user_id']) && !in_array($page, $public_pages)) {
+    $_SESSION['error'] = ERROR_MESSAGES['general']['access_denied'];
     header("Location: " . BASE_URL . "/index.php?page=login");
     exit();
 }
@@ -47,7 +107,9 @@ if (!isset($_SESSION['user_id']) && !in_array($page, $public_pages)) {
 // Content loader
 function loadContent($page)
 {
+    global $conn;
     $file = '';
+    $data = [];
 
     switch ($page) {
         case 'login':
@@ -74,11 +136,16 @@ function loadContent($page)
                 header("Location: " . BASE_URL . "/index.php?page=dashboard");
                 exit();
             }
+            // Get kelas data for dropdown
+            $stmt = $conn->query("SELECT id, nama_kelas FROM kelas ORDER BY nama_kelas");
+            $data['kelas'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $data['tahun_ajaran'] = CURRENT_ACADEMIC_YEAR;
             $file = 'views/auth/register.php';
             break;
 
         case 'admin/dashboard':
             if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+                $_SESSION['error'] = ERROR_MESSAGES['general']['access_denied'];
                 header("Location: " . BASE_URL . "/index.php?page=login");
                 exit();
             }
@@ -87,6 +154,7 @@ function loadContent($page)
 
         case 'guru/dashboard':
             if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'guru') {
+                $_SESSION['error'] = ERROR_MESSAGES['general']['access_denied'];
                 header("Location: " . BASE_URL . "/index.php?page=login");
                 exit();
             }
@@ -95,6 +163,7 @@ function loadContent($page)
 
         case 'siswa/dashboard':
             if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'siswa') {
+                $_SESSION['error'] = ERROR_MESSAGES['general']['access_denied'];
                 header("Location: " . BASE_URL . "/index.php?page=login");
                 exit();
             }
@@ -102,10 +171,8 @@ function loadContent($page)
             break;
 
         case 'logout':
-            session_unset();
-            session_destroy();
-            header("Location: " . BASE_URL . "/index.php?page=login");
-            exit();
+            global $auth;
+            $auth->logout();
             break;
 
         default:
@@ -113,6 +180,10 @@ function loadContent($page)
     }
 
     if (file_exists($file)) {
+        // Extract data untuk digunakan di view
+        if (!empty($data)) {
+            extract($data);
+        }
         return $file;
     }
     return 'views/templates/404.php';
@@ -151,6 +222,22 @@ if (preg_match('/\.(css|js|png|jpg|jpeg|gif)$/', $_SERVER['REQUEST_URI'])) {
     return false;
 }
 
+// Helper function untuk flash messages
+function getFlashMessage()
+{
+    if (isset($_SESSION['error'])) {
+        $error = $_SESSION['error'];
+        unset($_SESSION['error']);
+        return ['type' => 'danger', 'message' => $error];
+    }
+    if (isset($_SESSION['success'])) {
+        $success = $_SESSION['success'];
+        unset($_SESSION['success']);
+        return ['type' => 'success', 'message' => $success];
+    }
+    return null;
+}
+
 // Start output
 ?>
 <!DOCTYPE html>
@@ -175,6 +262,16 @@ if (preg_match('/\.(css|js|png|jpg|jpeg|gif)$/', $_SERVER['REQUEST_URI'])) {
 </head>
 
 <body>
+    <?php
+    // Display Flash Messages if any
+    $flashMessage = getFlashMessage();
+    if ($flashMessage): ?>
+        <div class="alert alert-<?= $flashMessage['type'] ?> alert-dismissible fade show" role="alert">
+            <?= $flashMessage['message'] ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
     <?php
     // Load Header kecuali untuk halaman login dan register
     if (!in_array($page, ['login', 'register'])) {
@@ -202,6 +299,20 @@ if (preg_match('/\.(css|js|png|jpg|jpeg|gif)$/', $_SERVER['REQUEST_URI'])) {
     <?php if (in_array($page, ['login', 'register'])): ?>
         <script src="<?= BASE_URL ?>/assets/js/<?= $page ?>.js"></script>
     <?php endif; ?>
+
+    <!-- Auto-hide alerts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto hide alerts after 5 seconds
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+        });
+    </script>
 </body>
 
 </html>
