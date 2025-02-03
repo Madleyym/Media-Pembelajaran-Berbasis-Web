@@ -1,25 +1,16 @@
 <?php
-// Di bagian atas file
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+    // Di bagian atas file
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
 
-// Logging untuk debug
-error_log("Requested URI: " . $_SERVER['REQUEST_URI']);
-error_log("Current working directory: " . getcwd());
+    // Logging untuk debug
+    error_log("Requested URI: " . $_SERVER['REQUEST_URI']);
+    error_log("Current working directory: " . getcwd());
 // Start session di awal
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Handler POST request di luar class
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $auth = new AuthController($conn);
 
-    if (isset($_POST['login'])) {
-        $auth->login($_POST['username'], $_POST['password']);
-    } elseif (isset($_POST['register'])) {
-        $auth->register($_POST, $_FILES);
-    }
-}
 // Load configuration
 require_once __DIR__ . '/config/constants.php';
 require_once __DIR__ . '/config/koneksi.php';
@@ -40,10 +31,10 @@ if (!defined('BASE_URL')) {
 
 // Get page from URL dan sanitasi
 $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_SANITIZE_URL) : 'login';
-error_log("Current Page: " . $page);
-error_log("Request URI: " . $_SERVER['REQUEST_URI']);
-error_log("Script Name: " . $_SERVER['SCRIPT_NAME']);
-error_log("Base URL: " . BASE_URL);
+    error_log("Current Page: " . $page);
+    error_log("Request URI: " . $_SERVER['REQUEST_URI']);
+    error_log("Script Name: " . $_SERVER['SCRIPT_NAME']);
+    error_log("Base URL: " . BASE_URL);
 // Daftar halaman yang tidak memerlukan autentikasi
 $public_pages = ['login', 'register'];
 
@@ -177,9 +168,9 @@ if (preg_match('/\.(css|js|png|jpg|jpeg|gif)$/', $_SERVER['REQUEST_URI'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <!-- <link href="<?= BASE_URL ?>/assets/css/style.css" rel="stylesheet"> -->
+    <link href="<?= BASE_URL ?>/assets/css/style.css" rel="stylesheet">
     <?php if (in_array($page, ['login', 'register'])): ?>
-        <!-- <link href="<?= BASE_URL ?>/assets/css/<?= $page ?>-style.css" rel="stylesheet"> -->
+        <link href="<?= BASE_URL ?>/assets/css/<?= $page ?>-style.css" rel="stylesheet">
     <?php endif; ?>
 </head>
 
@@ -207,9 +198,9 @@ if (preg_match('/\.(css|js|png|jpg|jpeg|gif)$/', $_SERVER['REQUEST_URI'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Custom JS -->
-    <!-- <script src="<?= BASE_URL ?>/assets/js/main.js"></script> -->
+    <script src="<?= BASE_URL ?>/assets/js/main.js"></script>
     <?php if (in_array($page, ['login', 'register'])): ?>
-        <!-- <script src="<?= BASE_URL ?>/assets/js/<?= $page ?>.js"></script> -->
+        <script src="<?= BASE_URL ?>/assets/js/<?= $page ?>.js"></script>
     <?php endif; ?>
 </body>
 
