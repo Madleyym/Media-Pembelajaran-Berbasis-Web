@@ -1,10 +1,18 @@
-RewriteEngine On
-RewriteBase /media/
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /media/
+    
+    # Allow direct access to assets and uploads folders
+    RewriteRule ^(assets|uploads)/ - [L]
+    
+    # Route everything else through index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?page=$1 [QSA,L]
+</IfModule>
 
-# Allow direct access to assets
-RewriteRule ^(assets|uploads)/ - [L]
-
-# Route everything else through index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?page=$1 [QSA,L]
+# Allow access to asset files
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
