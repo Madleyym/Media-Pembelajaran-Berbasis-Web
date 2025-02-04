@@ -76,50 +76,6 @@ if (isset($_SESSION['user_id'])) {
         padding: 2rem;
     }
 
-    .input-group .btn-outline-secondary {
-        border-color: var(--border-color);
-        background: var(--input-bg);
-        transition: all 0.3s ease;
-    }
-
-    .input-group .btn-outline-secondary:hover {
-        background: var(--border-color);
-    }
-
-    /* Perbaikan untuk file input */
-    .custom-file {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-        height: calc(1.5em + 1.5rem + 2px);
-        margin-bottom: 0;
-    }
-
-    .custom-file-input {
-        position: relative;
-        z-index: 2;
-        width: 100%;
-        height: calc(1.5em + 1.5rem + 2px);
-        margin: 0;
-        opacity: 0;
-    }
-
-    .custom-file-label {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 1;
-        height: calc(1.5em + 1.5rem + 2px);
-        padding: 0.75rem 1.25rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: var(--text-secondary);
-        background-color: var(--input-bg);
-        border: 3px solid var(--border-color);
-        border-radius: 15px;
-    }
-
     .register-container {
         background: white;
         border-radius: 30px;
@@ -127,10 +83,15 @@ if (isset($_SESSION['user_id'])) {
         overflow: hidden;
         width: 100%;
         max-width: 1200px;
-        padding: 0;
         position: relative;
     }
 
+    .register-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Left Side Styles */
     .left-side {
         background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         padding: 3rem;
@@ -142,23 +103,44 @@ if (isset($_SESSION['user_id'])) {
         min-height: 100%;
     }
 
+    .mascot-container {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .mascot-image {
+        max-width: 200px;
+        height: auto;
+        margin-bottom: 1.5rem;
+    }
+
     .welcome-bubble {
         background: white;
         border-radius: 20px;
         padding: 1.5rem 2rem;
-        margin-top: 1.5rem;
         color: var(--text-primary);
         box-shadow: var(--shadow-sm);
         width: 100%;
         max-width: 300px;
+        text-align: center;
     }
 
+    /* Right Side Styles */
     .right-side {
         padding: 3rem;
     }
 
+    /* Form Styles */
     .form-group {
         margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-label {
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        font-weight: 600;
+        display: block;
     }
 
     .form-control {
@@ -168,32 +150,80 @@ if (isset($_SESSION['user_id'])) {
         font-size: 1rem;
         transition: all 0.3s ease;
         background-color: var(--input-bg);
+        width: 100%;
     }
 
     .form-control:focus {
         border-color: var(--primary-color);
         box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.1);
+        outline: none;
     }
 
-    /* Password Strength Meter Custom Styles */
-    .password-strength-meter {
-        height: 5px;
-        border-radius: 2.5px;
-        margin-top: 0.5rem;
+    .form-select {
+        border: 3px solid var(--border-color);
+        border-radius: 15px;
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: var(--input-bg);
+        width: 100%;
+        cursor: pointer;
     }
 
-    .strength-weak {
-        background-color: var(--accent-color);
+    /* Input Group Styles */
+    .input-group {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        width: 100%;
     }
 
-    .strength-medium {
-        background-color: var(--warning-color);
+    .input-group .form-control {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
-    .strength-strong {
-        background-color: var(--success-color);
+    .input-group .btn {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
 
+    .btn-outline-secondary {
+        border-color: var(--border-color);
+        background: var(--input-bg);
+        transition: all 0.3s ease;
+        padding: 0.75rem 1.25rem;
+    }
+
+    /* File Input Styles */
+    .custom-file {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .preview-container {
+        max-width: 150px;
+        margin: 10px 0;
+    }
+
+    .preview-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin-bottom: 1rem;
+    }
+
+    .preview-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    /* Button Styles */
     .btn-register {
         background: var(--primary-color);
         border: none;
@@ -204,6 +234,8 @@ if (isset($_SESSION['user_id'])) {
         color: white;
         transition: all 0.3s ease;
         box-shadow: 0 5px 15px rgba(255, 159, 67, 0.3);
+        width: 100%;
+        margin-top: 1.5rem;
     }
 
     .btn-register:hover {
@@ -212,8 +244,47 @@ if (isset($_SESSION['user_id'])) {
         background: var(--primary-color);
     }
 
+    /* Password Strength Meter */
+    .password-strength-meter {
+        height: 5px;
+        border-radius: 2.5px;
+        margin-top: 0.5rem;
+    }
+
+    #password-strength-container {
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Alert Styles */
+    .alert {
+        border-radius: 15px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Login Link */
+    .login-link {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .login-link a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
     /* Responsive Design */
     @media (max-width: 991px) {
+        .register-container {
+            margin: 1rem;
+        }
+
         .left-side {
             padding: 2rem;
         }
@@ -223,13 +294,11 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .mascot-image {
-            width: 150px;
-            height: 150px;
+            max-width: 150px;
         }
 
         .welcome-bubble {
             padding: 1.25rem;
-            margin-top: 1.25rem;
         }
     }
 
@@ -239,7 +308,6 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .register-container {
-            margin: 0;
             border-radius: 20px;
         }
 
@@ -251,6 +319,18 @@ if (isset($_SESSION['user_id'])) {
         .form-group {
             margin-bottom: 1rem;
         }
+
+        .row {
+            margin: 0 -0.5rem;
+        }
+
+        .col-md-6 {
+            padding: 0 0.5rem;
+        }
+
+        .btn-register {
+            margin-top: 1rem;
+        }
     }
 </style>
 
@@ -260,7 +340,7 @@ if (isset($_SESSION['user_id'])) {
             <!-- Sisi Kiri - Visual -->
             <div class="col-lg-4 left-side">
                 <div class="mascot-container">
-                    <img src="<?= BASE_URL ?>/assets/images/mascot-toga.png" alt="Maskot Belajar" class="mascot-image">
+                    <img src="<?= BASE_URL ?>/assets/images/toga.png" alt="Maskot Belajar" class="mascot-image">
                 </div>
                 <div class="welcome-bubble">
                     <h2 class="text-center mb-0">Ayo Bergabung! 🌟</h2>
@@ -271,7 +351,7 @@ if (isset($_SESSION['user_id'])) {
             <!-- Sisi Kanan - Form Register -->
             <div class="col-lg-8 right-side">
                 <div class="register-content">
-                    <h1 class="text-center mb-4">Daftar Akun Baru 📝</h1>
+                    <h1 class="text-center mb-4">Daftar Akun Siswa 📚</h1>
 
                     <?php if (isset($_SESSION['error'])): ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -291,21 +371,19 @@ if (isset($_SESSION['user_id'])) {
                         </div>
                     <?php endif; ?>
 
-                    <!-- Perbaikan: Tambahkan form opening tag dengan action dan method -->
                     <form action="<?= BASE_URL ?>/index.php" method="POST" class="register-form" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="register">
                         <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                        <input type="hidden" name="role" value="siswa">
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
                                         <i class="fas fa-user me-2"></i>Nama Pengguna
                                     </label>
-                                    <input type="text"
-                                        name="username"
-                                        class="form-control"
-                                        placeholder="Masukkan nama pengguna"
-                                        required
+                                    <input type="text" name="username" class="form-control"
+                                        placeholder="Masukkan nama pengguna" required
                                         oninvalid="this.setCustomValidity('Mohon isi nama pengguna')"
                                         oninput="this.setCustomValidity('')">
                                 </div>
@@ -333,22 +411,55 @@ if (isset($_SESSION['user_id'])) {
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
+                                        <i class="fas fa-school me-2"></i>Kelas
+                                    </label>
+                                    <select name="id_kelas" class="form-select" required>
+                                        <option value="">Pilih Kelasmu</option>
+                                        <option value="1">Kelas 1</option>
+                                        <option value="2">Kelas 2</option>
+                                        <option value="3">Kelas 3</option>
+                                        <option value="4">Kelas 4</option>
+                                        <option value="5">Kelas 5</option>
+                                        <option value="6">Kelas 6</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-calendar me-2"></i>Tahun Ajaran
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" name="tahun_ajaran" class="form-control" readonly
+                                            value="<?= date('Y') . '/' . (date('Y') + 1) ?>"
+                                            style="background-color: var(--input-bg);">
+                                        <span class="input-group-text text-muted small">
+                                            <i class="fas fa-info-circle me-1"></i> Ajaran Saat Ini
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
                                         <i class="fas fa-lock me-2"></i>Kata Sandi
                                     </label>
                                     <div class="input-group">
-                                        <input type="password"
-                                            name="password"
-                                            class="form-control"
-                                            id="password"
-                                            placeholder="Buat kata sandi"
-                                            required
+                                        <input type="password" name="password" class="form-control"
+                                            id="password" placeholder="Buat kata sandi" required
                                             oninvalid="this.setCustomValidity('Mohon isi kata sandi')"
                                             oninput="this.setCustomValidity('')">
                                         <button class="btn btn-outline-secondary d-flex align-items-center"
-                                            type="button"
-                                            id="togglePassword">
+                                            type="button" id="togglePassword">
                                             <i class="fas fa-eye"></i>
                                         </button>
+                                    </div>
+                                    <div id="password-strength-container" style="height: 20px; margin-top: 0.5rem;">
+                                        <div id="password-strength"></div>
                                     </div>
                                 </div>
                             </div>
@@ -358,15 +469,10 @@ if (isset($_SESSION['user_id'])) {
                                         <i class="fas fa-lock me-2"></i>Ulangi Kata Sandi
                                     </label>
                                     <div class="input-group">
-                                        <input type="password"
-                                            name="confirm_password"
-                                            class="form-control"
-                                            id="confirm_password"
-                                            placeholder="Ulangi kata sandi"
-                                            required>
+                                        <input type="password" name="confirm_password" class="form-control"
+                                            id="confirm_password" placeholder="Ulangi kata sandi" required>
                                         <button class="btn btn-outline-secondary d-flex align-items-center"
-                                            type="button"
-                                            id="toggleConfirmPassword">
+                                            type="button" id="toggleConfirmPassword">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
@@ -376,42 +482,28 @@ if (isset($_SESSION['user_id'])) {
 
                         <div class="form-group">
                             <label class="form-label">
-                                <i class="fas fa-user-tag me-2"></i>Peran
-                            </label>
-                            <select name="role" class="form-select" required>
-                                <option value="">Pilih peranmu</option>
-                                <option value="siswa">Siswa</option>
-                                <option value="guru">Guru</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
                                 <i class="fas fa-image me-2"></i>Foto Profil
                             </label>
                             <div class="custom-file">
-                                <input type="file"
-                                    name="foto_profile"
-                                    class="form-control"
-                                    id="customFile"
-                                    accept="image/jpeg,image/png,image/jpg"
-                                    data-browse="Pilih File"
-                                    required
+                                <input type="file" name="foto_profile" class="form-control"
+                                    id="customFile" accept="image/jpeg,image/png,image/jpg"
+                                    data-browse="Pilih File" required
                                     oninvalid="this.setCustomValidity('Mohon pilih foto profil')"
                                     oninput="this.setCustomValidity('')">
-                                <label class="custom-file-label" for="customFile">Pilih file</label>
                             </div>
-                            <small class="text-muted">Format: JPG, JPEG, PNG (Maks. 2MB)</small>
-                            <button type="submit" class="btn btn-register w-100 mt-3">
+                            <small class="text-muted d-block mb-3">Format: JPG, JPEG, PNG (Maks. 2MB)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-register w-100">
                                 <i class="fas fa-user-plus me-2"></i>Daftar Sekarang
                             </button>
                         </div>
 
-
-                        <div class="login-link">
-                            <p>Sudah punya akun? <a href="<?= BASE_URL ?>/index.php?page=login">Masuk di sini</a></p>
+                        <div class="login-link text-center mt-3">
+                            <p class="mb-0">Sudah punya akun? <a href="<?= BASE_URL ?>/index.php?page=login">Masuk di sini</a></p>
                         </div>
-                    </form> <!-- Perbaikan: Pindahkan closing form tag ke sini -->
+                    </form>
                 </div>
             </div>
         </div>
@@ -419,20 +511,28 @@ if (isset($_SESSION['user_id'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            console.log("Register JS loaded");
+            console.log("Register Siswa JS loaded");
 
-            // Toggle Password Visibility
+            // Utility functions
+            const createElement = (tag, className = '', attributes = {}) => {
+                const element = document.createElement(tag);
+                if (className) element.className = className;
+                Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+                return element;
+            };
+
+            // Password Toggle Visibility
             function setupPasswordToggle(inputId, toggleId) {
                 const input = document.getElementById(inputId);
                 const toggle = document.getElementById(toggleId);
 
                 if (toggle && input) {
                     toggle.addEventListener("click", function() {
-                        const type =
-                            input.getAttribute("type") === "password" ? "text" : "password";
+                        const type = input.getAttribute("type") === "password" ? "text" : "password";
                         input.setAttribute("type", type);
-                        this.querySelector("i").classList.toggle("fa-eye");
-                        this.querySelector("i").classList.toggle("fa-eye-slash");
+                        const icon = this.querySelector("i");
+                        icon.classList.toggle("fa-eye");
+                        icon.classList.toggle("fa-eye-slash");
                     });
                 }
             }
@@ -442,133 +542,178 @@ if (isset($_SESSION['user_id'])) {
 
             // Password Strength Meter
             function checkPasswordStrength(password) {
-                let strength = 0;
-                if (password.length >= 8) strength++;
-                if (password.match(/[a-z]+/)) strength++;
-                if (password.match(/[A-Z]+/)) strength++;
-                if (password.match(/[0-9]+/)) strength++;
-                if (password.match(/[$@#&!]+/)) strength++;
+                const criteria = {
+                    length: password.length >= 8,
+                    lowercase: /[a-z]/.test(password),
+                    uppercase: /[A-Z]/.test(password),
+                    numbers: /[0-9]/.test(password),
+                    special: /[$@#&!]/.test(password)
+                };
 
-                const strengthBar = document.createElement('div');
-                strengthBar.className = 'progress mt-2';
-                strengthBar.style.height = '5px';
+                const strength = Object.values(criteria).filter(Boolean).length;
+                const strengthText = ['Sangat Lemah', 'Lemah', 'Sedang', 'Kuat', 'Sangat Kuat'][strength - 1] || '';
 
-                const progressBar = document.createElement('div');
-                progressBar.className = 'progress-bar';
-                progressBar.style.width = (strength * 20) + '%';
+                const container = createElement('div');
+                const progressBar = createElement('div', 'progress', {
+                    style: 'height: 5px;'
+                });
+                const progress = createElement('div', `progress-bar ${
+            ['bg-danger', 'bg-danger', 'bg-warning', 'bg-info', 'bg-success'][strength - 1]
+        }`, {
+                    style: `width: ${strength * 20}%`,
+                    'aria-valuenow': strength * 20,
+                    'aria-valuemin': '0',
+                    'aria-valuemax': '100'
+                });
 
-                switch (strength) {
-                    case 0:
-                    case 1:
-                        progressBar.className += ' bg-danger';
-                        progressBar.textContent = 'Lemah';
-                        break;
-                    case 2:
-                    case 3:
-                        progressBar.className += ' bg-warning';
-                        progressBar.textContent = 'Sedang';
-                        break;
-                    case 4:
-                    case 5:
-                        progressBar.className += ' bg-success';
-                        progressBar.textContent = 'Kuat';
-                        break;
-                }
+                progressBar.appendChild(progress);
+                container.appendChild(progressBar);
 
-                strengthBar.appendChild(progressBar);
-                return strengthBar;
+                const textIndicator = createElement('small', 'text-muted mt-1 d-block');
+                textIndicator.textContent = strengthText;
+                container.appendChild(textIndicator);
+
+                return container;
             }
 
-            // Add password strength meter
+            // Setup Password Strength Meter
             const passwordInput = document.getElementById('password');
-            const strengthContainer = document.createElement('div');
-            strengthContainer.id = 'password-strength';
-            passwordInput.parentNode.appendChild(strengthContainer);
+            if (passwordInput) {
+                const strengthContainer = document.getElementById('password-strength-container');
+                passwordInput.addEventListener('input', function() {
+                    strengthContainer.innerHTML = '';
+                    if (this.value) {
+                        strengthContainer.appendChild(checkPasswordStrength(this.value));
+                    }
+                });
+            }
 
-            passwordInput.addEventListener('input', function() {
-                const oldStrength = document.querySelector('#password-strength .progress');
-                if (oldStrength) oldStrength.remove();
-
-                if (this.value) {
-                    const strengthBar = checkPasswordStrength(this.value);
-                    document.getElementById('password-strength').appendChild(strengthBar);
-                }
-            });
-
-            // Preview foto profil
+            // File Upload Preview
             const fileInput = document.querySelector('input[name="foto_profile"]');
-            const previewContainer = document.createElement('div');
-            previewContainer.className = 'mt-2';
-            fileInput.parentNode.appendChild(previewContainer);
+            if (fileInput) {
+                const previewContainer = createElement('div', 'preview-container mt-3');
+                fileInput.parentNode.appendChild(previewContainer);
 
-            fileInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = this.files[0];
+                    if (!file) return;
+
+                    // Validate file
+                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                    if (!validTypes.includes(file.type)) {
+                        showError('Hanya file JPG, JPEG, dan PNG yang diperbolehkan! 🖼️');
+                        this.value = '';
+                        return;
+                    }
+
+                    if (file.size > 2 * 1024 * 1024) {
+                        showError('Ukuran file terlalu besar! Maksimal 2MB ya! 📁');
+                        this.value = '';
+                        return;
+                    }
+
+                    // Show preview
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         previewContainer.innerHTML = `
-                        <div class="position-relative">
-                            <img src="${e.target.result}" class="img-thumbnail" style="max-width: 200px">
-                            <button type="button" class="btn-close position-absolute top-0 end-0 m-1" 
-                                    aria-label="Close" id="removeImage"></button>
-                        </div>
-                    `;
+                    <div class="preview-image-wrapper position-relative">
+                        <img src="${e.target.result}" class="preview-image" alt="Preview">
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-1" 
+                                aria-label="Close" id="removeImage"></button>
+                    </div>
+                `;
 
                         document.getElementById('removeImage').addEventListener('click', function() {
                             fileInput.value = '';
                             previewContainer.innerHTML = '';
                         });
                     };
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-
-            // Form validation
-            const registerForm = document.querySelector(".register-form");
-            if (registerForm) {
-                registerForm.addEventListener("submit", function(e) {
-                    const password = document.getElementById("password").value;
-                    const confirmPassword = document.getElementById("confirm_password").value;
-                    const fileInput = document.querySelector('input[type="file"]');
-                    const submitBtn = this.querySelector('button[type="submit"]');
-
-                    // Password match validation
-                    if (password !== confirmPassword) {
-                        e.preventDefault();
-                        showError("Ups! Kata sandi tidak cocok. Coba periksa lagi ya! 😊");
-                        return;
-                    }
-
-                    // File size validation
-                    if (fileInput.files.length > 0) {
-                        const fileSize = fileInput.files[0].size / 1024 / 1024; // in MB
-                        if (fileSize > 2) {
-                            e.preventDefault();
-                            showError("Ukuran file terlalu besar! Maksimal 2MB ya! 📁");
-                            return;
-                        }
-                    }
-
-                    // Add loading state
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mendaftar...';
+                    reader.readAsDataURL(file);
                 });
             }
 
+            // Form Validation
+            const registerForm = document.querySelector(".register-form");
+            if (registerForm) {
+                registerForm.addEventListener("submit", function(e) {
+                    e.preventDefault();
+
+                    const password = document.getElementById("password").value;
+                    const confirmPassword = document.getElementById("confirm_password").value;
+                    const kelas = document.querySelector('select[name="id_kelas"]').value;
+                    const fileInput = document.querySelector('input[name="foto_profile"]');
+                    const submitBtn = this.querySelector('button[type="submit"]');
+
+                    // Validation checks
+                    const validations = [{
+                            condition: !kelas,
+                            message: "Mohon pilih kelas kamu ya! 🏫"
+                        },
+                        {
+                            condition: password !== confirmPassword,
+                            message: "Ups! Kata sandi tidak cocok. Coba periksa lagi ya! 😊"
+                        },
+                        {
+                            condition: password.length < 8,
+                            message: "Kata sandi minimal 8 karakter ya! 🔐"
+                        },
+                        {
+                            condition: !(/[A-Z]/.test(password)),
+                            message: "Kata sandi harus memiliki minimal 1 huruf besar! 🔠"
+                        },
+                        {
+                            condition: !(/[0-9]/.test(password)),
+                            message: "Kata sandi harus memiliki minimal 1 angka! 🔢"
+                        },
+                        {
+                            condition: fileInput.files.length > 0 && fileInput.files[0].size > 2 * 1024 * 1024,
+                            message: "Ukuran file terlalu besar! Maksimal 2MB ya! 📁"
+                        }
+                    ];
+
+                    const failedValidation = validations.find(v => v.condition);
+                    if (failedValidation) {
+                        showError(failedValidation.message);
+                        return;
+                    }
+
+                    // Submit form with loading state
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>
+                                 Mendaftarkan Siswa Kelas ${kelas}...`;
+
+                    try {
+                        this.submit();
+                    } catch (error) {
+                        showError("Terjadi kesalahan. Silakan coba lagi! 😔");
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-user-plus me-2"></i>Daftar Sekarang';
+                    }
+                });
+            }
+
+            // Error Display
             function showError(message) {
                 const existingAlert = document.querySelector(".alert");
                 if (existingAlert) {
                     existingAlert.remove();
                 }
 
-                const alertDiv = document.createElement("div");
-                alertDiv.className = "alert alert-danger alert-dismissible fade show";
+                const alertDiv = createElement("div", "alert alert-danger alert-dismissible fade show");
                 alertDiv.innerHTML = `
-                <i class="fas fa-exclamation-circle me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            `;
+            <i class="fas fa-exclamation-circle me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+
                 const form = document.querySelector(".register-form");
                 form.insertBefore(alertDiv, form.firstChild);
+
+                // Auto-dismiss alert
+                setTimeout(() => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 150);
+                }, 5000);
             }
         });
     </script>
