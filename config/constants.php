@@ -29,7 +29,8 @@ switch (ENVIRONMENT) {
 }
 
 // Database Configuration
-define('DB_NAME', 'db_media_pembelajaran');
+define('DB_NAME', 'db_media_pembelajaran'); 
+// db_media_pembelajaran'
 
 // Application Configuration
 define('APP_NAME', 'Media Pembelajaran SD');
@@ -102,7 +103,9 @@ define('SCHOOL_LEVELS', [
     5 => 'Kelas 5',
     6 => 'Kelas 6'
 ]);
-
+// define('CURRENT_ACADEMIC_YEAR', '2024/2025'); // Update this accordingly
+// define('MAX_LOGIN_ATTEMPTS', 5);
+define('LOGIN_TIMEOUT_MINUTES', 30);
 // Asset Paths
 define('CSS_PATH', BASE_URL . '/assets/css');
 define('JS_PATH', BASE_URL . '/assets/js');
