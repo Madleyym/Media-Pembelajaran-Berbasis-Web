@@ -65,6 +65,20 @@ CREATE TABLE materi (
     FOREIGN KEY (id_guru) REFERENCES users(id)
 );
 
+-- Tabel progress_materi
+CREATE TABLE progress_materi (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    siswa_id INT NOT NULL,
+    materi_id INT NOT NULL,
+    status ENUM('belum', 'selesai') DEFAULT 'belum',
+    tanggal_selesai DATETIME DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (siswa_id) REFERENCES users(id),
+    FOREIGN KEY (materi_id) REFERENCES materi(id)
+    ALTER TABLE materi ADD id_kelas INT NOT NULL;
+);
+
 -- Tabel Kuis
 CREATE TABLE kuis (
     id INT PRIMARY KEY AUTO_INCREMENT,
