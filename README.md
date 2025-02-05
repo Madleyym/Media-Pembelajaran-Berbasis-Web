@@ -25,6 +25,7 @@ ADD reset_token_expiry DATETIME DEFAULT NULL;
 ALTER TABLE siswa_kelas 
 ADD status ENUM('active', 'inactive', 'graduated') DEFAULT 'active',
 ADD UNIQUE KEY `unique_siswa_kelas_tahun` (`id_siswa`, `id_kelas`, `tahun_ajaran`);
+ALTER TABLE kuis ADD COLUMN id_kelas int(11) NOT NULL;
 
 -- Tambah data default untuk kelas
 INSERT INTO kelas (nama_kelas) VALUES 
