@@ -47,52 +47,46 @@ class AuthController
         }
     }
 
-
     public function login(string $username, string $password): void
     {
         try {
-            if (empty($username) || empty($password)) {
-                throw new Exception("Username dan password harus diisi!");
-            }
-
-            // Check login attempts
             $this->checkLoginAttempts($username);
 
             $stmt = $this->conn->prepare("
-                SELECT * FROM users 
-                WHERE username = ? 
-                AND status = 'active'
+                SELECT u.*, sk.id_kelas 
+                FROM users u 
+                LEFT JOIN siswa_kelas sk ON u.id = sk.id_siswa 
+                    AND sk.status = 'active'
+                    AND sk.tahun_ajaran = ?
+                WHERE u.username = ? 
+                AND u.status = 'active'
             ");
-            $stmt->execute([filter_var($username, FILTER_SANITIZE_STRING)]);
+            
+            $currentYear = CURRENT_ACADEMIC_YEAR; // Make sure this constant is defined
+            $stmt->execute([$currentYear, $username]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
             if ($user && password_verify($password, $user['password'])) {
-                // Record successful login
-                $this->recordLoginAttempt($username, true);
-
-                // Update last accessed time
-                $updateStmt = $this->conn->prepare("
-                    UPDATE users 
-                    SET updated_at = CURRENT_TIMESTAMP 
-                    WHERE id = :id
-                ");
-                $updateStmt->execute([':id' => $user['id']]);
-
-                // Set session data
+                // For students, check if they're assigned to a class
+                if ($user['role'] === 'siswa' && !$user['id_kelas']) {
+                    throw new Exception("Akun anda belum ditentukan kelasnya. Silahkan hubungi admin.");
+                }
+    
+                // Initialize user session
                 $this->initializeUserSession($user);
 
+                // Log successful login
+                $this->recordLoginAttempt($username, true);
+                
                 // Redirect based on role
                 $this->redirectBasedOnRole($user['role']);
             } else {
-                // Record failed attempt
+                // Log failed login
                 $this->recordLoginAttempt($username, false);
-                throw new Exception("Username atau Password salah!");
+                throw new Exception("Username atau password salah");
             }
         } catch (Exception $e) {
-            error_log("Login error for user {$username}: " . $e->getMessage());
-            $_SESSION['error'] = $e->getMessage();
-            header("Location: index.php?page=login");
-            exit();
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -399,4 +393,9 @@ class AuthController
         }
         exit();
     }
+}
+
+// Prevent direct access to this file
+if (!defined('ALLOWED_ACCESS')) {
+    die('Direct access not permitted');
 }
