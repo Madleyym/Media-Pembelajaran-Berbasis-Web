@@ -23,21 +23,21 @@ $siswa = $stmt->fetch();
 $stmt = $conn->prepare("
     SELECT 
         COUNT(DISTINCT m.id) as total_materi,
-        COUNT(DISTINCT pm.id_materi) as materi_selesai,
+        COUNT(DISTINCT pm.materi_id) as materi_selesai,
         COUNT(DISTINCT k.id) as total_kuis,
         COUNT(DISTINCT nk.id_kuis) as kuis_selesai
     FROM materi m
-    LEFT JOIN progress_materi pm ON m.id = pm.id_materi AND pm.id_siswa = ?
-    LEFT JOIN kuis k ON m.id_kelas = ?
+    LEFT JOIN progress_materi pm ON m.id = pm.materi_id AND pm.siswa_id = ?
+    LEFT JOIN kuis k ON m.id_mapel = k.id_mapel
     LEFT JOIN nilai_kuis nk ON k.id = nk.id_kuis AND nk.id_siswa = ?
-    WHERE m.id_kelas = ?
+    WHERE m.id_mapel = ?
 ");
-$stmt->execute([$_SESSION['user_id'], $siswa['id_kelas'], $_SESSION['user_id'], $siswa['id_kelas']]);
+$stmt->execute([$_SESSION['user_id'], $_SESSION['user_id'], $siswa['id_kelas']]);
 $progress = $stmt->fetch();
 
 // Ambil nilai terbaru
 $stmt = $conn->prepare("
-    SELECT k.judul_kuis, nk.nilai, nk.created_at
+    SELECT k.judul, nk.nilai, nk.created_at
     FROM nilai_kuis nk
     JOIN kuis k ON nk.id_kuis = k.id
     WHERE nk.id_siswa = ?
